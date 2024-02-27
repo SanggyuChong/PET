@@ -82,14 +82,23 @@ def get_targets(structures, GENERAL_TARGET_SETTINGS):
         targets.append(torch.FloatTensor(target_now))
     return targets
         
-def get_self_contributions(energy_key, train_structures, all_species):
+def get_self_contributions(energy_key, train_structures, all_species, FITTING_SCHEME):
+
     train_energies = np.array(
         [structure.info[energy_key] for structure in train_structures]
     )
     train_c_feat = get_compositional_features(train_structures, all_species)
     rgr = Ridge(alpha=1e-10, fit_intercept=False)
     rgr.fit(train_c_feat, train_energies)
-    return rgr.coef_
+
+    if FITTING_SCHEME.CALC_SELF_CONTRIBUTIONS:
+        return rgr.coef_
+
+    # WHEN USER OPTS NOT TO PREDICT BASED ON SELF_CONTRIBUTIONS, i.e.
+    # `CALC_SELF_CONTRIBUTIONS` = False
+    # USE THIS OPTION AT YOUR OWN RISK!!!
+    else:
+        return np.zeros(len(rgr.coef_))
 
 
 def get_corrected_energies(energy_key, structures, all_species, self_contributions):

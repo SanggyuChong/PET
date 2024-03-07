@@ -65,7 +65,7 @@ def fit_pet(train_structures, val_structures, hypers_dict, name_of_calculation, 
                                 ARCHITECTURAL_HYPERS.K_CUT)
 
     if MLIP_SETTINGS.USE_ENERGIES:
-        self_contributions = get_self_contributions(MLIP_SETTINGS.ENERGY_KEY, train_structures, all_species, FITTING_SCHEME)
+        self_contributions = get_self_contributions(MLIP_SETTINGS.ENERGY_KEY, train_structures, all_species)
         np.save(f'{output_dir}/{NAME_OF_CALCULATION}/self_contributions.npy', self_contributions)
 
         train_energies = get_corrected_energies(MLIP_SETTINGS.ENERGY_KEY, train_structures, all_species, self_contributions)

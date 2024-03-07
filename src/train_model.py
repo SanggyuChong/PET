@@ -66,7 +66,7 @@ def fit_pet(train_structures, val_structures, hypers_dict, name_of_calculation, 
 
     if MLIP_SETTINGS.USE_ENERGIES:
 
-        if len(FITTING_SCHEME.USER_SELF_CONTRIBUTIONS) > 0:
+        if FITTING_SCHEME.USER_SELF_CONTRIBUTIONS:
             user_species = np.sort(np.array(FITTING_SCHEME.USER_SELF_CONTRIBUTIONS.keys()))
             if not np.equal(user_species, all_species):
                 raise ValueError("When using USER_SELF_CONTRIBUTIONS, user must provide a dictionary with values for all the species in the datasets")

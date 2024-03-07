@@ -65,7 +65,16 @@ def fit_pet(train_structures, val_structures, hypers_dict, name_of_calculation, 
                                 ARCHITECTURAL_HYPERS.K_CUT)
 
     if MLIP_SETTINGS.USE_ENERGIES:
-        self_contributions = get_self_contributions(MLIP_SETTINGS.ENERGY_KEY, train_structures, all_species)
+
+        if len(FITTING_SCHEME.USER_SELF_CONTRIBUTIONS) > 0:
+            user_species = np.sort(np.array(FITTING_SCHEME.USER_SELF_CONTRIBUTIONS.keys()))
+            if not np.equal(user_species, all_species):
+                raise ValueError("When using USER_SELF_CONTRIBUTIONS, user must provide a dictionary with values for all the species in the datasets")
+            self_contributions = np.array([FITTING_SCHEME.USER_SELF_CONTRIBUTIONS[sp] for sp in user_species])
+
+        else:
+            self_contributions = get_self_contributions(MLIP_SETTINGS.ENERGY_KEY, train_structures, all_species)
+
         np.save(f'{output_dir}/{NAME_OF_CALCULATION}/self_contributions.npy', self_contributions)
 
         train_energies = get_corrected_energies(MLIP_SETTINGS.ENERGY_KEY, train_structures, all_species, self_contributions)
